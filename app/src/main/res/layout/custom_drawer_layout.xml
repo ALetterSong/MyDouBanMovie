@@ -4,10 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--主布局-->
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:background="@color/movie_placeholder">
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:visibility="gone" />
         <GridView
             android:id="@+id/gridView"
             android:layout_width="match_parent"
@@ -15,7 +23,7 @@
             android:columnWidth="180dp"
             android:numColumns="2"
             android:stretchMode="columnWidth" />
-    </LinearLayout>
+    </FrameLayout>
     <!--侧滑菜单-->
     <RelativeLayout
         android:id="@+id/relative_layout"
@@ -25,9 +33,9 @@
         android:background="@color/white">
 
         <FrameLayout
+            android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:id="@+id/frame_layout">
+            android:layout_height="160dp">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -52,8 +60,8 @@
             android:id="@+id/lv_left_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@null"
-            android:layout_below="@id/frame_layout"/>
+            android:layout_below="@id/frame_layout"
+            android:divider="@null" />
 
         <ListView
             android:id="@+id/lv_left_setting_menu"
@@ -62,7 +70,7 @@
             android:layout_alignParentBottom="true"
             android:divider="@null"></ListView>
 
-        />
+
     </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

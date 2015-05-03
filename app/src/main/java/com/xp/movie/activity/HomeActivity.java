@@ -18,6 +18,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import java.util.List;
  */
 public class HomeActivity extends BaseActivity {
     private Toolbar toolbar;
+    private ProgressBar progressBar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView leftDrawerListView,settingListView;
@@ -48,7 +50,7 @@ public class HomeActivity extends BaseActivity {
     private static final String ENDPOINT = "http://api.douban.com";
     private static final String US_BOX = "北美票房榜";
     private static final String TOP250 = "TOP250";
-    private static final String WEEKLY = "item";
+    private static final String SEARCH = "搜索";
     private static final String ABOUT = "关于";
     private static final String QUIT = "退出";
 
@@ -75,6 +77,7 @@ public class HomeActivity extends BaseActivity {
         leftDrawerListView = (ListView) findViewById(R.id.lv_left_menu);   //listview
         settingListView= (ListView) findViewById(R.id.lv_left_setting_menu);
         gridView = (GridView) findViewById(R.id.gridView);           //gridview
+        progressBar= (ProgressBar) findViewById(R.id.progressbar);//progressbar
         setupGridViewAdapter();
         toolbar.setTitle("");           //设置Toolbar标题
 //        toolbar.setTitleTextColor(Color.parseColor("#ffffff")); //设置标题颜色
@@ -97,6 +100,7 @@ public class HomeActivity extends BaseActivity {
         mDrawerToggle.syncState();
         initDrawerItem();
         new MovieTask().execute(US_BOX_URL);
+        progressBar.setVisibility(View.VISIBLE);
         //  downLoader();
     }
     //初始化drawer元素
@@ -107,12 +111,12 @@ public class HomeActivity extends BaseActivity {
         int[] drawerItemIconIds = new int[]{
                 R.drawable.ic_action_play,
                 R.drawable.ic_action_play,
-                R.drawable.ic_action_play
+                R.drawable.ic_action_search_black,
         };
         String[] drawerItemNames = new String[]{
                 US_BOX,
                 TOP250,
-                WEEKLY
+                SEARCH
         };
         for (int i = 0; i < 3; i++) {
             DrawerItem drawerItem = new DrawerItem(drawerItemIconIds[i], drawerItemNames[i]);
@@ -168,7 +172,8 @@ drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerS
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 2:
-//                        new MovieTask().execute(WEEKLY_URL);
+                        Intent intent =new Intent(HomeActivity.this,SearchActivity.class);
+                        startActivity(intent);
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     default:
@@ -217,6 +222,7 @@ drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerS
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
+            progressBar.setVisibility(View.INVISIBLE);
             for (int i = 0; i < movies.size(); i++) {
                 Movie movie;
                 movie = movies.get(i);
@@ -250,12 +256,14 @@ drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerS
         return true;
     }
 
-    //菜单选择
+    //搜索
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_about:
-               initAbout();
+            case R.id.action_search:
+                Intent intent =new Intent(this,SearchActivity.class);
+                startActivity(intent);
+
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -82,7 +82,6 @@ public class JsonParser {
             JSONObject jsonObjectMovieInfo = new JSONObject(string2);
             JSONArray castsArray = jsonObjectMovieInfo.getJSONArray("casts");
             JSONArray directorsArray =jsonObjectMovieInfo.getJSONArray("directors");
-//            JSONArray genresArray=jsonObjectMovieInfo.getJSONArray("genres");
             MovieInfo movieInfo = new MovieInfo();
 
             for (int i = 0; i < castsArray.length(); i++) {
@@ -100,24 +99,12 @@ public class JsonParser {
             movieInfo.setGenres(jsonObjectMovieInfo.getString("genres"));
             movieInfo.setImages(images.getString("large"));
             movieInfo.setSummary(jsonObjectMovieInfo.getString("summary"));
-            Log.i("JsonParser", movieInfo.getTitle()+" "+movieInfo.getCasts()+movieInfo.getGenres()+movieInfo.getDirectors()
-            +movieInfo.getSummary());
-
+            movieInfoLists.add(movieInfo);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//                String id = object.getString("id");
-//                String title =
-//                JSONObject imagesimagesi = object.getJSONObject("images");
-//                String website = object.getString("website");
-//                String summary = object.getString("summary");
-//                String directors = object.getString("directors");
-//                String casts = ;
-
-
         return movieInfoLists;
     }
 }
