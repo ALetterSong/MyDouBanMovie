@@ -1,7 +1,6 @@
 package com.xp.movie.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -15,26 +14,23 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.xp.movie.R;
 import com.xp.movie.adapter.DrawerItemAdapter;
 import com.xp.movie.adapter.MovieAdapter;
-//import com.xp.movie.loader.DownloaderThread;
+import com.xp.movie.loader.JsonParser;
 import com.xp.movie.model.DrawerItem;
 import com.xp.movie.model.Movie;
 import com.xp.movie.utils.ActivityCollector;
-import com.xp.movie.utils.JsonParser;
-
 
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.xp.movie.loader.DownloaderThread;
 
 
 /**
@@ -45,7 +41,7 @@ public class HomeActivity extends BaseActivity {
     private ProgressBar progressBar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ListView leftDrawerListView,settingListView;
+    private ListView leftDrawerListView, settingListView;
     private RelativeLayout relativeLayout;
     private static final String ENDPOINT = "http://api.douban.com";
     private static final String US_BOX = "北美票房榜";
@@ -56,9 +52,9 @@ public class HomeActivity extends BaseActivity {
 
     private static final String US_BOX_URL = "/v2/movie/us_box";
     private static final String TOP250_URL = "/v2/movie/top250";
-//    private static final String WEEKLY_URL = "/v2/movie/weekly";
+    //    private static final String WEEKLY_URL = "/v2/movie/weekly";
     private static final String TAG = "HomeActivity";
-    private ArrayAdapter drawerItemAdapter,drawerSettingItemAdapter;
+    private ArrayAdapter drawerItemAdapter, drawerSettingItemAdapter;
     private GridView gridView;
     private List<Movie> mMovies;
 //    private DownloaderThread<ImageView> downloaderThread;
@@ -73,17 +69,17 @@ public class HomeActivity extends BaseActivity {
     public void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);  //toolbar
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_left);  //drawer_layout
-        relativeLayout= (RelativeLayout) findViewById(R.id.relative_layout);
+        relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
         leftDrawerListView = (ListView) findViewById(R.id.lv_left_menu);   //listview
-        settingListView= (ListView) findViewById(R.id.lv_left_setting_menu);
+        settingListView = (ListView) findViewById(R.id.lv_left_setting_menu);
         gridView = (GridView) findViewById(R.id.gridView);           //gridview
-        progressBar= (ProgressBar) findViewById(R.id.progressbar);//progressbar
+        progressBar = (ProgressBar) findViewById(R.id.progressbar);//progressbar
         setupGridViewAdapter();
         toolbar.setTitle("");           //设置Toolbar标题
 //        toolbar.setTitleTextColor(Color.parseColor("#ffffff")); //设置标题颜色
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setHomeButtonEnabled(true); //决定左上角的图标是否可以点击
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//给左上角图标的左边加上一个返回的图标
 
         //创建返回键，并实现打开关/闭监听
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close) {
@@ -100,9 +96,10 @@ public class HomeActivity extends BaseActivity {
         mDrawerToggle.syncState();
         initDrawerItem();
         new MovieTask().execute(US_BOX_URL);
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         //  downLoader();
     }
+
     //初始化drawer元素
     public void initDrawerItem() {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -126,7 +123,7 @@ public class HomeActivity extends BaseActivity {
         leftDrawerListView.setAdapter(drawerItemAdapter);
 
 
-        ArrayList<DrawerItem> drawerSettingItemsArrayList=new ArrayList<>();
+        ArrayList<DrawerItem> drawerSettingItemsArrayList = new ArrayList<>();
         int[] drawerSettingItemIconIds = new int[]{
                 R.drawable.ic_action_settings,
                 R.drawable.ic_action_cancel
@@ -139,23 +136,23 @@ public class HomeActivity extends BaseActivity {
             DrawerItem drawerItem = new DrawerItem(drawerSettingItemIconIds[i], drawerSettingItemNames[i]);
             drawerSettingItemsArrayList.add(drawerItem);
         }
-drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerSettingItemsArrayList);
+        drawerSettingItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_item, drawerSettingItemsArrayList);
         settingListView.setAdapter(drawerSettingItemAdapter);
-
         initClick();
     }
+
     //点击事件
     public void initClick() {
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Movie movie = ((MovieAdapter) adapterView.getAdapter()).getItem(i);
-                String movieId= movie.getId();
-                Log.i(TAG,movieId+"------------------");
-                Intent intent =new Intent(HomeActivity.this,MovieInfoActivity.class);
-                intent.putExtra("id",movieId);
+                String movieId = movie.getId();
+                Log.i(TAG, movieId + "------------------");
+                Intent intent = new Intent(HomeActivity.this, MovieInfoActivity.class);
+                intent.putExtra("id", movieId);
                 startActivity(intent);
             }
         });
@@ -164,15 +161,17 @@ drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerS
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
+                        progressBar.setVisibility(View.VISIBLE);
                         new MovieTask().execute(US_BOX_URL);
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 1:
+                        progressBar.setVisibility(View.VISIBLE);
                         new MovieTask().execute(TOP250_URL);
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 2:
-                        Intent intent =new Intent(HomeActivity.this,SearchActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
                         startActivity(intent);
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
@@ -212,10 +211,10 @@ drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerS
 
         @Override
         protected List<Movie> doInBackground(String... strings) {
-            if (strings[0] == US_BOX_URL){
-                mMovies= JsonParser.getMovieWithSubject(ENDPOINT + strings[0]);}
-            else if (strings[0] == TOP250_URL) {
-                mMovies= JsonParser.getMovie(ENDPOINT + strings[0]);
+            if (strings[0] == US_BOX_URL) {
+                mMovies = JsonParser.getMovieWithSubject(ENDPOINT + strings[0]);
+            } else if (strings[0] == TOP250_URL) {
+                mMovies = JsonParser.getMovie(ENDPOINT + strings[0]);
             }
             return mMovies;
         }
@@ -226,28 +225,12 @@ drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerS
             for (int i = 0; i < movies.size(); i++) {
                 Movie movie;
                 movie = movies.get(i);
-                Log.i(TAG, movie.getTitle() + movie.getImgUrl());
+                Log.i(TAG, movie.getTitle() + movie.getImage());
             }
             mMovies = movies;
             setupGridViewAdapter();
         }
     }
-    //后台线程，执行重复且耗时的下载任务
-//    public void downLoader(){
-//        downloaderThread=new DownloaderThread<ImageView>();
-//        downloaderThread.start();  //启动线程
-//        downloaderThread.getLooper();
-//        Log.i(TAG,"background started----------");
-//
-//
-//    }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        downloaderThread.quit();  //终止线程
-//        Log.i(TAG,"quit-----------------");
-//    }
 
     //创建菜单
     @Override
@@ -260,15 +243,14 @@ drawerSettingItemAdapter=new DrawerItemAdapter(this,R.layout.drawer_item,drawerS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                Intent intent =new Intent(this,SearchActivity.class);
-                startActivity(intent);
-
+            case R.id.action_setting:
+                initAbout();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-    public void initAbout(){
+
+    public void initAbout() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.about)
                 .customView(R.layout.dialog_webview, false)

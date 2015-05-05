@@ -1,22 +1,17 @@
 package com.xp.movie.activity;
 
-import android.app.Activity;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xp.movie.R;
-import com.xp.movie.model.Movie;
+import com.xp.movie.loader.JsonParser;
 import com.xp.movie.model.MovieInfo;
-import com.xp.movie.utils.JsonParser;
 
 import java.util.List;
 

@@ -21,7 +21,6 @@ import java.util.List;
  * Created by XP on 2015/4/30.
  */
 public class MovieAdapter extends ArrayAdapter<Movie> {
-//    private DownloaderThread<ImageView>mDownloaderThread;
 
     public MovieAdapter(Context context, List<Movie> movies) {
         super(context, 0, movies);
@@ -30,25 +29,28 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_movie_item, parent,false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_movie_item, null);
+            viewHolder = new ViewHolder();
+
+
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.item_movie_imageView);
+            viewHolder.textView = (TextView) convertView.findViewById(R.id.item_movie_title);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         Movie movie = getItem(position);
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.item_movie_imageView);
-        TextView textView= (TextView) convertView.findViewById(R.id.item_movie_title);
-        Picasso.with(getContext()).load(movie.getImgUrl()).resize(320, 450)
-                .centerCrop().into(imageView);
-        textView.setText(movie.getTitle());
-        Log.i("Adapter",movie.getId()+"----------------------------");
-   //     imageView.setImageResource(R.drawable.ic_launcher);
-
-
-//        mDownloaderThread=new DownloaderThread<ImageView>();
-//        mDownloaderThread.start();  //启动线程
-//        mDownloaderThread.getLooper();
-//        mDownloaderThread.queueThumbnail(imageView,movie.getImgUrl());
-
-
+        Picasso.with(getContext()).load(movie.getImage()).resize(320, 450)
+                .centerCrop().into(viewHolder.imageView);
+        viewHolder.textView.setText(movie.getTitle());
+        Log.i("Adapter", movie.getId() + "----------------------------");
         return convertView;
+    }
+
+    private static class ViewHolder {
+        private ImageView imageView;
+        private TextView textView;
     }
 }
