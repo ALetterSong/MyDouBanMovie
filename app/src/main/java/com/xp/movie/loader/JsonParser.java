@@ -1,9 +1,5 @@
 package com.xp.movie.loader;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
-import com.xp.movie.activity.HomeActivity;
 import com.xp.movie.model.Movie;
 import com.xp.movie.model.MovieInfo;
 import com.xp.movie.utils.HttpUtils;
@@ -11,7 +7,6 @@ import com.xp.movie.utils.HttpUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,8 +46,9 @@ public class JsonParser {
     public static List<Movie> getMovie(String url) {
         List<Movie> moviesList = new ArrayList<>();
         try {
-            Log.i("json-----------",url);
+//            Log.i("json-----------",url);
             String string1 = HttpUtils.getUrl(url);
+//            Log.i("json-----------",string1);
             JSONObject jsonObjectMovie = new JSONObject(string1);
             JSONArray subjects = jsonObjectMovie.getJSONArray("subjects");//第一层，subject是一个Json数组
             for (int i = 0; i < subjects.length(); i++) {
@@ -64,15 +60,16 @@ public class JsonParser {
                 movie.setTime(object.getString("year"));//year层
                 movie.setImage(images.getString("large"));//images层
                 moviesList.add(movie);
-                for (i = 0; i < moviesList.size(); i++) {
-                    movie = moviesList.get(i);
-                    Log.i("json---", movie.getTitle() + movie.getImage());
-                }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        for (int a = 0; a < moviesList.size(); a++) {
+            Movie movies = moviesList.get(a);
+//            Log.i("json---", movies.getTitle() + movies.getTime());
         }
         return moviesList;
     }
@@ -81,23 +78,23 @@ public class JsonParser {
     public static List<MovieInfo> getMovieInfo(String url) {
         List<MovieInfo> movieInfoLists = new ArrayList<>();
         try {
-            JSONObject castsObject=null;
-            String casts =" ";
-            JSONObject directorsObject=null;
-            String directors =" ";
+            JSONObject castsObject = null;
+            String casts = " ";
+            JSONObject directorsObject = null;
+            String directors = " ";
             String string2 = HttpUtils.getUrl(url);
             JSONObject jsonObjectMovieInfo = new JSONObject(string2);
             JSONArray castsArray = jsonObjectMovieInfo.getJSONArray("casts");
-            JSONArray directorsArray =jsonObjectMovieInfo.getJSONArray("directors");
+            JSONArray directorsArray = jsonObjectMovieInfo.getJSONArray("directors");
             MovieInfo movieInfo = new MovieInfo();
 
             for (int i = 0; i < castsArray.length(); i++) {
                 castsObject = castsArray.getJSONObject(i);
-                casts+=castsObject.getString("name")+" ";
+                casts += castsObject.getString("name") + " ";
             }
             for (int i = 0; i < directorsArray.length(); i++) {
                 directorsObject = directorsArray.getJSONObject(i);
-                directors+=directorsObject.getString("name")+" ";
+                directors += directorsObject.getString("name") + " ";
             }
             JSONObject images = jsonObjectMovieInfo.getJSONObject("images");
             movieInfo.setTitle(jsonObjectMovieInfo.getString("title"));

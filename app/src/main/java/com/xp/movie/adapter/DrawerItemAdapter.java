@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.xp.movie.R;
 import com.xp.movie.model.DrawerItem;
 
@@ -20,6 +19,7 @@ import java.util.ArrayList;
  */
 public class DrawerItemAdapter extends ArrayAdapter {
     private int resourceId;
+
     public DrawerItemAdapter(Context context, int resourceId, ArrayList<DrawerItem> objects) {
         super(context, resourceId, objects);
         this.resourceId = resourceId;
@@ -29,7 +29,7 @@ public class DrawerItemAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         DrawerItem drawerItem = (DrawerItem) getItem(position);
         ViewHolder viewHolder;
-        if(convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
             viewHolder = new ViewHolder();
             viewHolder.itemIconView = (ImageView) convertView.findViewById(R.id.drawerItem_icon_view);
@@ -43,7 +43,7 @@ public class DrawerItemAdapter extends ArrayAdapter {
         return convertView;
     }
 
-    private static class ViewHolder{
+    private static class ViewHolder {
         private ImageView itemIconView;
         private TextView itemNameView;
     }

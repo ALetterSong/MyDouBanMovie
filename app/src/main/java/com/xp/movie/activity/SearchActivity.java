@@ -4,20 +4,19 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.xp.movie.R;
 import com.xp.movie.adapter.MovieSearchAdapter;
 import com.xp.movie.loader.JsonParser;
 import com.xp.movie.model.Movie;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 
@@ -28,8 +27,6 @@ public class SearchActivity extends BaseActivity {
     private static final String SEARCH_URL = "http://api.douban.com/v2/movie/search?q=";
     private List<Movie> movieList;
     private ListView searchResultListView;
-    private MaterialEditText editText;
-    private Toolbar toolbar;
     private SearchView mSearchView;
 
 
@@ -37,10 +34,8 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         initView();
     }
-
 
     public void initView() {
 //        toolbar= (Toolbar) findViewById(R.id.search_toolbar);
@@ -50,26 +45,29 @@ public class SearchActivity extends BaseActivity {
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_CUSTOM);
 //        editText = (MaterialEditText) getSupportActionBar().getCustomView().findViewById(R.id.edit_text_search);m
         mSearchView = (SearchView) findViewById(R.id.search_view);
-        mSearchView.setIconifiedByDefault(true);
-        mSearchView.onActionViewExpanded();
-        mSearchView.setFocusable(false);
-        mSearchView.clearFocus();
-//      mSearchView.setIconifiedByDefault(true);
+        mSearchView.setIconifiedByDefault(true);//表示搜索图标是否在输入框内
+        mSearchView.setQueryHint(getString(R.string.search_hint));
+        mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String s) {
-                if (s.trim().equals("")) {
-                    if (movieList != null) {
-                        movieList.clear();
-                    }
-                    new SearchTask().execute(s);
-                } else {
-                    new MaterialDialog.Builder(SearchActivity.this)
-                            .title(R.string.suggest_title)
-                            .content(R.string.suggest_content)
-                            .positiveText(R.string.agree)
-                            .show();
+//                if (s.trim().equals("")) {
+//                    if (movieList != null) {
+//                        movieList.clear();
+//                    }
+                try {
+                    String s1 = URLEncoder.encode(s, "utf-8");
+                    new SearchTask().execute(s1);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
+//                } else {
+//                    new MaterialDialog.Builder(SearchActivity.this)
+//                            .title(R.string.suggest_title)
+//                            .content(R.string.suggest_content)
+//                            .positiveText(R.string.agree)
+//                            .show();
+//                }
                 return true;
             }
 
@@ -100,7 +98,6 @@ public class SearchActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
-
     }
 
     public class SearchTask extends AsyncTask<String, Void, List<Movie>> {
@@ -114,10 +111,10 @@ public class SearchActivity extends BaseActivity {
         protected void onPostExecute(List<Movie> movies) {
             movieList = movies;
             searchResultListView.setAdapter(new MovieSearchAdapter(SearchActivity.this, movieList));
-
-
         }
-    }
 
+    }
 }
+
+
 

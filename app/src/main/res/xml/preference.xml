@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="一般设置">
+        <CheckBoxPreference
+            android:title="@string/net"
+            android:key="@string/image_quality_key"
+            android:summaryOn="@string/net_on"
+            android:summaryOff="@string/net_off"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/about">
+        <Preference  android:key="@string/about_key"
+            android:title="@string/about"
+            android:summary="@string/setting_about"/>
+        <Preference  android:key="@string/build_time_key" android:title="@string/build_time"/>
+    </PreferenceCategory>
+</PreferenceScreen>

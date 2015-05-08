@@ -2,7 +2,6 @@ package com.xp.movie.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -19,7 +18,6 @@ import java.util.List;
  * Created by XP on 2015/5/2.
  */
 public class MovieInfoActivity extends BaseActivity {
-    private Toolbar toolbar;
     private List<MovieInfo> mMovieInfos;
     private ImageView imageView;
     private TextView tvTitle;
@@ -41,16 +39,9 @@ public class MovieInfoActivity extends BaseActivity {
     }
 
     public void initView() {
-//        toolbar = (Toolbar) findViewById(R.id.toolbar);  //toolbar
-//        toolbar.setTitle("");           //设置Toolbar标题
-
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         moviesId = getIntent().getStringExtra("id");
         new MovieInfoTask().execute(moviesId);
-        Log.i(TAG, moviesId + "-----------------------");
+//        Log.i(TAG, moviesId + "-----------------------");
         imageView = (ImageView) findViewById(R.id.movie_info_imageView);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvDirector = (TextView) findViewById(R.id.tv_directors);
@@ -62,13 +53,10 @@ public class MovieInfoActivity extends BaseActivity {
 
     //后台线程,从豆瓣下载并解析Json并存入List容器
     public class MovieInfoTask extends AsyncTask<String, Void, List<MovieInfo>> {
-
-
         @Override
         protected List<MovieInfo> doInBackground(String... strings) {
             mMovieInfos = JsonParser.getMovieInfo(INFO_ENDPOINT + strings[0]);
             return mMovieInfos;
-
         }
 
         @Override
@@ -92,7 +80,6 @@ public class MovieInfoActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.home:
                 this.finish();

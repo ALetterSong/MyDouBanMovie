@@ -47,17 +47,15 @@ public class HomeActivity extends BaseActivity {
     private static final String US_BOX = "北美票房榜";
     private static final String TOP250 = "TOP250";
     private static final String SEARCH = "搜索";
-    private static final String ABOUT = "关于";
+    private static final String SETTING = "设置";
     private static final String QUIT = "退出";
 
     private static final String US_BOX_URL = "/v2/movie/us_box";
     private static final String TOP250_URL = "/v2/movie/top250";
-    //    private static final String WEEKLY_URL = "/v2/movie/weekly";
     private static final String TAG = "HomeActivity";
     private ArrayAdapter drawerItemAdapter, drawerSettingItemAdapter;
     private GridView gridView;
     private List<Movie> mMovies;
-//    private DownloaderThread<ImageView> downloaderThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +74,7 @@ public class HomeActivity extends BaseActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressbar);//progressbar
         setupGridViewAdapter();
         toolbar.setTitle("");           //设置Toolbar标题
-//        toolbar.setTitleTextColor(Color.parseColor("#ffffff")); //设置标题颜色
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setHomeButtonEnabled(true); //决定左上角的图标是否可以点击
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//给左上角图标的左边加上一个返回的图标
-
-        //创建返回键，并实现打开关/闭监听
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerOpened(View drawerView) {  //打开菜单
@@ -96,8 +89,7 @@ public class HomeActivity extends BaseActivity {
         mDrawerToggle.syncState();
         initDrawerItem();
         new MovieTask().execute(US_BOX_URL);
-//        progressBar.setVisibility(View.VISIBLE);
-        //  downLoader();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     //初始化drawer元素
@@ -129,7 +121,7 @@ public class HomeActivity extends BaseActivity {
                 R.drawable.ic_action_cancel
         };
         String[] drawerSettingItemNames = new String[]{
-                ABOUT,
+                SETTING,
                 QUIT
         };
         for (int i = 0; i < 2; i++) {
@@ -185,7 +177,8 @@ public class HomeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        initAbout();
+                        Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
+                        startActivity(intent);
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 1:
@@ -222,11 +215,11 @@ public class HomeActivity extends BaseActivity {
         @Override
         protected void onPostExecute(List<Movie> movies) {
             progressBar.setVisibility(View.INVISIBLE);
-            for (int i = 0; i < movies.size(); i++) {
-                Movie movie;
-                movie = movies.get(i);
-                Log.i(TAG, movie.getTitle() + movie.getImage());
-            }
+//            for (int i = 0; i < movies.size(); i++) {
+//                Movie movie;
+//                movie = movies.get(i);
+//                Log.i(TAG, movie.getTitle() + movie.getImage());
+//            }
             mMovies = movies;
             setupGridViewAdapter();
         }
@@ -243,6 +236,10 @@ public class HomeActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_search:
+                Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+                startActivity(intent);
+                break;
             case R.id.action_setting:
                 initAbout();
                 break;

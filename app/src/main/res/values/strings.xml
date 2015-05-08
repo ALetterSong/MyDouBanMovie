@@ -12,6 +12,31 @@
     <string name="agree">确认</string>
     <string name="suggest_title">提示</string>
     <string name="suggest_content">您的输入有误，请检查你的输入</string>
+    <string name="setting">设置</string>
+    <string name="setting_name">程序设置</string>
+    <string name="set_image_quality">设置图片质量</string>
+    <string name="image_quality">图片质量</string>
+    <string name="image_quality_key">image_quality</string>
+    <string name="about_key">about</string>
+    <string name="developer">developer</string>
+    <string name="setting_about">开发者和开源协议</string>
+    <string name="net">省流量模式</string>
+    <string name="click_to_show_quality">点击选择图片质量</string>
+    <string name="net_on">省流量模式已打开</string>
+    <string name="net_off">省流量模式已关闭</string>
+    <string name="build_time">构建时间</string>
+    <string name="build_time_key">build_time</string>
+    <string name="year">年份</string>
+    <string-array name="image_quality">
+        <item>低</item>
+        <item>中等</item>
+        <item>高</item>
+    </string-array>
 
+    <string-array name="image_quality_value">
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
 
-</resources>
+    </resources>

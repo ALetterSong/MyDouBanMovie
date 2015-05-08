@@ -1,7 +1,6 @@
 package com.xp.movie.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xp.movie.R;
-//import com.xp.movie.loader.DownloaderThread;
 import com.xp.movie.model.Movie;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,8 +30,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_movie_item, null);
             viewHolder = new ViewHolder();
-
-
             viewHolder.imageView = (ImageView) convertView.findViewById(R.id.item_movie_imageView);
             viewHolder.textView = (TextView) convertView.findViewById(R.id.item_movie_title);
             convertView.setTag(viewHolder);
@@ -43,9 +38,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         }
         Movie movie = getItem(position);
         Picasso.with(getContext()).load(movie.getImage()).resize(320, 450)
-                .centerCrop().into(viewHolder.imageView);
+                .centerCrop().placeholder(R.drawable.ic_action_play).into(viewHolder.imageView);
         viewHolder.textView.setText(movie.getTitle());
-        Log.i("Adapter", movie.getId() + "----------------------------");
+//        Log.i("Adapter", movie.getId() + "----------------------------");
         return convertView;
     }
 
