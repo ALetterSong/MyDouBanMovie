@@ -30,9 +30,6 @@ import com.xp.movie.utils.ActivityCollector;
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.xp.movie.loader.DownloaderThread;
-
-
 /**
  * Created by XP on 2015/4/12.
  */
