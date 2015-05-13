@@ -12,9 +12,10 @@
     <TextView
         android:id="@+id/movie"
         android:layout_width="match_parent"
-        android:layout_height="16dp"
+        android:layout_height="30dp"
         android:layout_toRightOf="@id/search_item_movie_imageview"
         android:paddingLeft="10dp"
+        android:paddingTop="13dp"
         android:text="电影" />
 
     <TextView
@@ -26,7 +27,8 @@
         android:gravity="left"
         android:paddingLeft="10dp"
         android:text="title"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/search_item_movie_time"
@@ -36,7 +38,8 @@
         android:layout_toRightOf="@id/search_item_movie_imageview"
         android:gravity="left"
         android:paddingLeft="10dp"
-        android:text="2015 5 8" />
+        android:text="2015 5 8"
+        android:textColor="@color/orange" />
 
 
 </RelativeLayout>

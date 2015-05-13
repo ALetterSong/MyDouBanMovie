@@ -8,5 +8,8 @@
     <color name="lv_background">#ff4e5d64</color>
     <color name="text_color">#363F44</color>
     <color name="white">#FFF</color>
-
+    <color name="orange">#ffff9e0e</color>
+    <color name="green">#009900</color>
+    <color name="blue">#000099</color>
 </resources>
+

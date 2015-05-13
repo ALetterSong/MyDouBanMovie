@@ -16,13 +16,20 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:visibility="gone" />
-        <GridView
-            android:id="@+id/gridView"
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/activity_main_swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnWidth="180dp"
-            android:numColumns="2"
-            android:stretchMode="columnWidth" />
+            android:layout_height="wrap_content">
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnWidth="180dp"
+                android:numColumns="2"
+                android:stretchMode="columnWidth" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
     </FrameLayout>
     <!--侧滑菜单-->
     <RelativeLayout

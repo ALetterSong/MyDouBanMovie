@@ -1,8 +1,11 @@
 package com.xp.movie.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,12 +22,14 @@ import java.util.List;
  */
 public class MovieInfoActivity extends BaseActivity {
     private List<MovieInfo> mMovieInfos;
+    private Toolbar toolbar;
     private ImageView imageView;
     private TextView tvTitle;
     private TextView tvDirector;
     private TextView tvCasts;
     private TextView tvGenres;
     private TextView tvSummary;
+    private MovieInfo movieInfo;
     private static final String TAG = "MovieInfoActivity";
     private static final String INFO_ENDPOINT = "http://api.douban.com/v2/movie/subject/";
     private String moviesId;
@@ -34,11 +39,13 @@ public class MovieInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_info);
         initView();
-
-
     }
 
     public void initView() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar_info);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         moviesId = getIntent().getStringExtra("id");
         new MovieInfoTask().execute(moviesId);
 //        Log.i(TAG, moviesId + "-----------------------");
@@ -63,7 +70,6 @@ public class MovieInfoActivity extends BaseActivity {
         protected void onPostExecute(List<MovieInfo> movieInfos) {
             super.onPostExecute(movieInfos);
             for (int i = 0; i < movieInfos.size(); i++) {
-                MovieInfo movieInfo;
                 movieInfo = mMovieInfos.get(i);
                 Picasso.with(MovieInfoActivity.this).load(movieInfo.getImages()).resize(300, 400)
                         .centerCrop()
@@ -73,18 +79,30 @@ public class MovieInfoActivity extends BaseActivity {
                 tvCasts.setText("主演:   " + movieInfo.getCasts());
                 tvGenres.setText("类型:   " + movieInfo.getGenres());
                 tvSummary.setText("简介:   " + movieInfo.getSummary());
+                toolbar.setSubtitle(movieInfo.getTitle());
                 Log.i("JsonParser", movieInfo.getImages());
             }
         }
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_info, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.home:
-                this.finish();
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.menu_item_share:
+                String text = "<<" + movieInfo.getTitle() + ">> 来自@豆瓣";
+                Intent openIntent = new Intent();
+                openIntent.setAction(Intent.ACTION_SEND);
+                openIntent.putExtra(Intent.EXTRA_TEXT, text);
+                openIntent.setType("text/plain");
+                startActivity(openIntent);
         }
+        return super.onOptionsItemSelected(item);
+
     }
 }

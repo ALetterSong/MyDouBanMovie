@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,7 +38,8 @@ import java.util.List;
  * Created by XP on 2015/4/12.
  */
 public class HomeActivity extends BaseActivity {
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar progressBar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -65,17 +67,20 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void initView() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);  //toolbar
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_left);  //drawer_layout
-        relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
-        leftDrawerListView = (ListView) findViewById(R.id.lv_left_menu);   //listview
-        settingListView = (ListView) findViewById(R.id.lv_left_setting_menu);
-        gridView = (GridView) findViewById(R.id.gridView);           //gridview
-        progressBar = (ProgressBar) findViewById(R.id.progressbar);//progressbar
-        setupGridViewAdapter();
-        toolbar.setTitle("");           //设置Toolbar标题
-        setSupportActionBar(toolbar);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close) {
+        mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
+        mToolbar =           (Toolbar) findViewById(R.id.toolbar);
+        mDrawerLayout =      (DrawerLayout) findViewById(R.id.dl_left);
+        relativeLayout =     (RelativeLayout) findViewById(R.id.relative_layout);
+        leftDrawerListView = (ListView) findViewById(R.id.lv_left_menu);
+        settingListView =    (ListView) findViewById(R.id.lv_left_setting_menu);
+        gridView =           (GridView) findViewById(R.id.gridView);
+        progressBar =        (ProgressBar) findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.green, R.color.orange);
+        setupAdapter();
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerOpened(View drawerView) {  //打开菜单
                 super.onDrawerOpened(drawerView);
@@ -87,9 +92,24 @@ public class HomeActivity extends BaseActivity {
             }
         };
         mDrawerToggle.syncState();
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG,"is refreshing");
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
         initDrawerItem();
         new MovieTask().execute(US_BOX_URL);
-        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    //gridView适配器
+    private void setupAdapter() {
+        if (mMovies != null) {
+            gridView.setAdapter(new MovieAdapter(HomeActivity.this, mMovies));
+        } else {
+            gridView.setAdapter(null);
+        }
     }
 
     //初始化drawer元素
@@ -190,14 +210,6 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
-    //gridView适配器
-    private void setupGridViewAdapter() {
-        if (mMovies != null) {
-            gridView.setAdapter(new MovieAdapter(HomeActivity.this, mMovies));
-        } else {
-            gridView.setAdapter(null);
-        }
-    }
 
     //后台线程,从豆瓣下载并解析Json并存入List容器
     public class MovieTask extends AsyncTask<String, Void, List<Movie>> {
@@ -221,7 +233,7 @@ public class HomeActivity extends BaseActivity {
 //                Log.i(TAG, movie.getTitle() + movie.getImage());
 //            }
             mMovies = movies;
-            setupGridViewAdapter();
+            setupAdapter();
         }
     }
 

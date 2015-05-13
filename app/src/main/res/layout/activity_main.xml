@@ -6,7 +6,6 @@
 
     <include layout="@layout/custom_toolbar" />
 
-
     <include layout="@layout/custom_drawer_layout" />
 
 </LinearLayout>

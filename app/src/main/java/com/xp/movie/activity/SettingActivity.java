@@ -13,7 +13,6 @@ import com.xp.movie.fragment.SettingFragment;
  */
 public class SettingActivity extends BaseActivity {
     private Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
