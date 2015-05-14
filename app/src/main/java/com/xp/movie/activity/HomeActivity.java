@@ -18,6 +18,7 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.xp.movie.R;
@@ -35,26 +36,26 @@ import java.util.List;
  * Created by XP on 2015/4/12.
  */
 public class HomeActivity extends BaseActivity {
+
     private Toolbar mToolbar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private GridView gridView;
+    private List<Movie> mMovies;
     private ProgressBar progressBar;
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private ListView leftDrawerListView, settingListView;
     private RelativeLayout relativeLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ListView leftDrawerListView, settingListView;
+    private ArrayAdapter drawerItemAdapter, drawerSettingItemAdapter;
     private static final String ENDPOINT = "http://api.douban.com";
     private static final String US_BOX = "北美票房榜";
     private static final String TOP250 = "TOP250";
     private static final String SEARCH = "搜索";
     private static final String SETTING = "设置";
     private static final String QUIT = "退出";
-
     private static final String US_BOX_URL = "/v2/movie/us_box";
     private static final String TOP250_URL = "/v2/movie/top250";
     private static final String TAG = "HomeActivity";
-    private ArrayAdapter drawerItemAdapter, drawerSettingItemAdapter;
-    private GridView gridView;
-    private List<Movie> mMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +65,14 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void initView() {
-        mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
-        mToolbar =           (Toolbar) findViewById(R.id.toolbar);
-        mDrawerLayout =      (DrawerLayout) findViewById(R.id.dl_left);
-        relativeLayout =     (RelativeLayout) findViewById(R.id.relative_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_left);
+        relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
         leftDrawerListView = (ListView) findViewById(R.id.lv_left_menu);
-        settingListView =    (ListView) findViewById(R.id.lv_left_setting_menu);
-        gridView =           (GridView) findViewById(R.id.gridView);
-        progressBar =        (ProgressBar) findViewById(R.id.progressbar);
+        settingListView = (ListView) findViewById(R.id.lv_left_setting_menu);
+        gridView = (GridView) findViewById(R.id.gridView);
+        progressBar = (ProgressBar) findViewById(R.id.progressbar);
         progressBar.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.green, R.color.orange);
         setupAdapter();
@@ -92,7 +93,7 @@ public class HomeActivity extends BaseActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG,"is refreshing");
+                Log.i(TAG, "is refreshing");
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -113,16 +114,13 @@ public class HomeActivity extends BaseActivity {
     public void initDrawerItem() {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         //设置菜单列表
+        //上半部分
         ArrayList<DrawerItem> drawerItemArrayList = new ArrayList<>();
+        String[] drawerItemNames = new String[]{US_BOX,TOP250,SEARCH};
         int[] drawerItemIconIds = new int[]{
                 R.drawable.ic_action_play,
                 R.drawable.ic_action_play,
                 R.drawable.ic_action_search_black,
-        };
-        String[] drawerItemNames = new String[]{
-                US_BOX,
-                TOP250,
-                SEARCH
         };
         for (int i = 0; i < 3; i++) {
             DrawerItem drawerItem = new DrawerItem(drawerItemIconIds[i], drawerItemNames[i]);
@@ -130,16 +128,12 @@ public class HomeActivity extends BaseActivity {
         }
         drawerItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_item, drawerItemArrayList);
         leftDrawerListView.setAdapter(drawerItemAdapter);
-
-
+        //下半部分
         ArrayList<DrawerItem> drawerSettingItemsArrayList = new ArrayList<>();
+        String[] drawerSettingItemNames = new String[]{SETTING,QUIT};
         int[] drawerSettingItemIconIds = new int[]{
                 R.drawable.ic_action_settings,
                 R.drawable.ic_action_cancel
-        };
-        String[] drawerSettingItemNames = new String[]{
-                SETTING,
-                QUIT
         };
         for (int i = 0; i < 2; i++) {
             DrawerItem drawerItem = new DrawerItem(drawerSettingItemIconIds[i], drawerSettingItemNames[i]);
@@ -159,7 +153,6 @@ public class HomeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Movie movie = ((MovieAdapter) adapterView.getAdapter()).getItem(i);
                 String movieId = movie.getId();
-                Log.i(TAG, movieId + "------------------");
                 Intent intent = new Intent(HomeActivity.this, MovieInfoActivity.class);
                 intent.putExtra("id", movieId);
                 startActivity(intent);
@@ -170,12 +163,12 @@ public class HomeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        progressBar.setVisibility(View.VISIBLE);
+                        Toast.makeText(HomeActivity.this,"加载中",Toast.LENGTH_SHORT).show();
                         new MovieTask().execute(US_BOX_URL);
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 1:
-                        progressBar.setVisibility(View.VISIBLE);
+                        Toast.makeText(HomeActivity.this,"加载中",Toast.LENGTH_SHORT).show();
                         new MovieTask().execute(TOP250_URL);
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
@@ -223,12 +216,6 @@ public class HomeActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
-            progressBar.setVisibility(View.INVISIBLE);
-//            for (int i = 0; i < movies.size(); i++) {
-//                Movie movie;
-//                movie = movies.get(i);
-//                Log.i(TAG, movie.getTitle() + movie.getImage());
-//            }
             mMovies = movies;
             setupAdapter();
         }
@@ -241,7 +228,7 @@ public class HomeActivity extends BaseActivity {
         return true;
     }
 
-    //搜索
+    //响应菜单
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -255,7 +242,7 @@ public class HomeActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    //关于
     public void initAbout() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.about)
