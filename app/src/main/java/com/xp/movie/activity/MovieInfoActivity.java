@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xp.movie.R;
-import com.xp.movie.loader.JsonParser;
+import com.xp.movie.parser.JsonParser;
 import com.xp.movie.model.MovieInfo;
 
 import java.util.List;

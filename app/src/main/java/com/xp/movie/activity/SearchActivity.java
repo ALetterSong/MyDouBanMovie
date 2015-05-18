@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 import com.xp.movie.R;
 import com.xp.movie.adapter.MovieSearchAdapter;
-import com.xp.movie.loader.JsonParser;
+import com.xp.movie.parser.JsonParser;
 import com.xp.movie.model.Movie;
 
 import java.io.UnsupportedEncodingException;

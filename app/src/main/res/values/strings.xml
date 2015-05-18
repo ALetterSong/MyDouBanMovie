@@ -27,6 +27,7 @@
     <string name="build_time">构建时间</string>
     <string name="build_time_key">build_time</string>
     <string name="year">年份</string>
+    <string name="loading">加载中</string>
     <string-array name="image_quality">
         <item>低</item>
         <item>中等</item>

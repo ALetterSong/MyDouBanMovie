@@ -1,5 +1,10 @@
-package com.xp.movie.loader;
+package com.xp.movie.parser;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.xp.movie.App;
+import com.xp.movie.R;
 import com.xp.movie.model.Movie;
 import com.xp.movie.model.MovieInfo;
 import com.xp.movie.utils.HttpUtils;
@@ -16,9 +21,8 @@ import java.util.List;
  * Created by XP on 2015/4/29.
  */
 
-
+//http://developers.douban.com/wiki/?title=api_v2 豆瓣V2文档
 public class JsonParser {
-    //http://developers.douban.com/wiki/?title=api_v2 豆瓣V2文档
     public static List<Movie> getMovieWithSubject(String url) {
         List<Movie> moviesList = new ArrayList<>();
         try {
@@ -32,7 +36,13 @@ public class JsonParser {
                 Movie movie = new Movie();
                 movie.setId(subject.getString("id")); //id层
                 movie.setTitle(subject.getString("title")); //subject层
-                movie.setImage(images.getString("large"));  //images层
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+                boolean sPref = preferences.getBoolean(String.valueOf(R.string.image_quality_key), true);
+                if (sPref) {
+                    movie.setImage(images.getString("large"));
+                } else {
+                    movie.setImage(images.getString("medium"));
+                }//images层
                 moviesList.add(movie);
             }
         } catch (JSONException e) {
@@ -58,7 +68,13 @@ public class JsonParser {
                 movie.setId(object.getString("id")); //id层
                 movie.setTitle(object.getString("title")); //subject层
                 movie.setTime(object.getString("year"));//year层
-                movie.setImage(images.getString("large"));//images层
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+                boolean sPref = preferences.getBoolean(String.valueOf(R.string.image_quality_key), true);
+                if (sPref) {
+                    movie.setImage(images.getString("large"));
+                } else {
+                    movie.setImage(images.getString("medium"));
+                }//images层
                 moviesList.add(movie);
 
             }

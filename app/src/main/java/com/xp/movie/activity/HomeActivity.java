@@ -24,10 +24,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.xp.movie.R;
 import com.xp.movie.adapter.DrawerItemAdapter;
 import com.xp.movie.adapter.MovieAdapter;
-import com.xp.movie.loader.JsonParser;
 import com.xp.movie.model.DrawerItem;
 import com.xp.movie.model.Movie;
+import com.xp.movie.parser.JsonParser;
 import com.xp.movie.utils.ActivityCollector;
+import com.xp.movie.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,10 @@ import java.util.List;
  * Created by XP on 2015/4/12.
  */
 public class HomeActivity extends BaseActivity {
-
     private Toolbar mToolbar;
     private GridView gridView;
     private List<Movie> mMovies;
+    private boolean isHome = true;
     private ProgressBar progressBar;
     private DrawerLayout mDrawerLayout;
     private RelativeLayout relativeLayout;
@@ -56,6 +57,7 @@ public class HomeActivity extends BaseActivity {
     private static final String US_BOX_URL = "/v2/movie/us_box";
     private static final String TOP250_URL = "/v2/movie/top250";
     private static final String TAG = "HomeActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,12 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "is refreshing");
+                mSwipeRefreshLayout.setRefreshing(true);
+                if (isHome){
+                    new MovieTask().execute(US_BOX_URL);
+                }else {
+                    new MovieTask().execute(TOP250_URL);
+                }
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -116,7 +124,7 @@ public class HomeActivity extends BaseActivity {
         //设置菜单列表
         //上半部分
         ArrayList<DrawerItem> drawerItemArrayList = new ArrayList<>();
-        String[] drawerItemNames = new String[]{US_BOX,TOP250,SEARCH};
+        String[] drawerItemNames = new String[]{US_BOX, TOP250, SEARCH};
         int[] drawerItemIconIds = new int[]{
                 R.drawable.ic_action_play,
                 R.drawable.ic_action_play,
@@ -130,7 +138,7 @@ public class HomeActivity extends BaseActivity {
         leftDrawerListView.setAdapter(drawerItemAdapter);
         //下半部分
         ArrayList<DrawerItem> drawerSettingItemsArrayList = new ArrayList<>();
-        String[] drawerSettingItemNames = new String[]{SETTING,QUIT};
+        String[] drawerSettingItemNames = new String[]{SETTING, QUIT};
         int[] drawerSettingItemIconIds = new int[]{
                 R.drawable.ic_action_settings,
                 R.drawable.ic_action_cancel
@@ -163,13 +171,17 @@ public class HomeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        Toast.makeText(HomeActivity.this,"加载中",Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShortToast(HomeActivity.this,getString(R.string.loading));
+                        mSwipeRefreshLayout.setRefreshing(true);
                         new MovieTask().execute(US_BOX_URL);
+                        isHome=true;
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 1:
-                        Toast.makeText(HomeActivity.this,"加载中",Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShortToast(HomeActivity.this,getString(R.string.loading));
+                        mSwipeRefreshLayout.setRefreshing(true);
                         new MovieTask().execute(TOP250_URL);
+                        isHome=false;
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 2:
@@ -218,6 +230,7 @@ public class HomeActivity extends BaseActivity {
         protected void onPostExecute(List<Movie> movies) {
             mMovies = movies;
             setupAdapter();
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -242,6 +255,7 @@ public class HomeActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     //关于
     public void initAbout() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
