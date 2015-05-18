@@ -58,7 +58,6 @@ public class HomeActivity extends BaseActivity {
     private static final String TOP250_URL = "/v2/movie/top250";
     private static final String TAG = "HomeActivity";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
