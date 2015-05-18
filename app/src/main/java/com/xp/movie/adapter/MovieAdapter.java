@@ -46,7 +46,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         Picasso.with(getContext()).load(movie.getImage()).resize(320, 450)
                 .centerCrop().placeholder(R.drawable.ic_action_play).into(viewHolder.imageView);
         viewHolder.textView.setText(movie.getTitle());
-//        Log.i("Adapter", movie.getId() + "----------------------------");
         return convertView;
     }
 
