@@ -45,9 +45,7 @@ public class JsonParser {
                 }//images层
                 moviesList.add(movie);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
         return moviesList;
@@ -78,14 +76,8 @@ public class JsonParser {
                 moviesList.add(movie);
 
             }
-        } catch (JSONException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (int a = 0; a < moviesList.size(); a++) {
-            Movie movies = moviesList.get(a);
-//            Log.i("json---", movies.getTitle() + movies.getTime());
         }
         return moviesList;
     }
@@ -94,9 +86,9 @@ public class JsonParser {
     public static List<MovieInfo> getMovieInfo(String url) {
         List<MovieInfo> movieInfoLists = new ArrayList<>();
         try {
-            JSONObject castsObject = null;
+            JSONObject castsObject;
             String casts = " ";
-            JSONObject directorsObject = null;
+            JSONObject directorsObject;
             String directors = " ";
             String string2 = HttpUtils.getUrl(url);
             JSONObject jsonObjectMovieInfo = new JSONObject(string2);
@@ -120,9 +112,7 @@ public class JsonParser {
             movieInfo.setImages(images.getString("large"));
             movieInfo.setSummary(jsonObjectMovieInfo.getString("summary"));
             movieInfoLists.add(movieInfo);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
         return movieInfoLists;

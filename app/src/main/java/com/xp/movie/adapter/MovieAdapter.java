@@ -24,7 +24,6 @@ import libcore.io.DiskLruCache.Snapshot;
  * Created by XP on 2015/4/30.
  */
 public class MovieAdapter extends ArrayAdapter<Movie> {
-    private DiskLruCache mDiskLruCache;
 
     public MovieAdapter(Context context, List<Movie> movies) {
         super(context, 0, movies);

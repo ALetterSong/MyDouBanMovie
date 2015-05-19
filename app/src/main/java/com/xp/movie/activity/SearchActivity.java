@@ -12,8 +12,8 @@ import android.widget.ListView;
 
 import com.xp.movie.R;
 import com.xp.movie.adapter.MovieSearchAdapter;
-import com.xp.movie.parser.JsonParser;
 import com.xp.movie.model.Movie;
+import com.xp.movie.parser.JsonParser;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,8 +27,6 @@ public class SearchActivity extends BaseActivity {
     private static final String SEARCH_URL = "http://api.douban.com/v2/movie/search?q=";
     private List<Movie> movieList;
     private ListView searchResultListView;
-    private SearchView mSearchView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +42,7 @@ public class SearchActivity extends BaseActivity {
 //        getSupportActionBar().setCustomView(R.layout.material_edit_text);
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_CUSTOM);
 //        editText = (MaterialEditText) getSupportActionBar().getCustomView().findViewById(R.id.edit_text_search);m
-        mSearchView = (SearchView) findViewById(R.id.search_view);
+        SearchView mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchView.setIconifiedByDefault(true);//表示搜索图标是否在输入框内
         mSearchView.setQueryHint(getString(R.string.search_hint));
         mSearchView.setIconified(false);

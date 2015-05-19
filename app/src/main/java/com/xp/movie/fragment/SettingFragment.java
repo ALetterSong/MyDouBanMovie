@@ -26,16 +26,6 @@ public class SettingFragment extends PreferenceFragment {
             }
         });
         findPreference(getString(R.string.build_time_key)).setSummary(BUILD_TIME);
-//        findPreference(getString(R.string.image_quality_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//            @Override
-//            public boolean onPreferenceChange(Preference preference, Object o) {
-//                SharedPreferences sharedPreferences= getActivity().getSharedPreferences("test",
-//                        Activity.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                editor.putBoolean("name",(Boolean)o);
-//                editor.commit();
-//                Toast.makeText(getActivity(), "checkBox_0改变的值为" + (Boolean)o, Toast.LENGTH_LONG).show();
-//
     }
 
     public void openAbout() {

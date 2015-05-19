@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xp.movie.R;
-import com.xp.movie.parser.JsonParser;
 import com.xp.movie.model.MovieInfo;
+import com.xp.movie.parser.JsonParser;
 
 import java.util.List;
 
@@ -32,7 +32,6 @@ public class MovieInfoActivity extends BaseActivity {
     private MovieInfo movieInfo;
     private static final String TAG = "MovieInfoActivity";
     private static final String INFO_ENDPOINT = "http://api.douban.com/v2/movie/subject/";
-    private String moviesId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,7 @@ public class MovieInfoActivity extends BaseActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        moviesId = getIntent().getStringExtra("id");
+        String moviesId = getIntent().getStringExtra("id");
         new MovieInfoTask().execute(moviesId);
 //        Log.i(TAG, moviesId + "-----------------------");
         imageView = (ImageView) findViewById(R.id.movie_info_imageView);

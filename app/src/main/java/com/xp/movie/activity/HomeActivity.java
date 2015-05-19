@@ -7,7 +7,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +17,6 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.xp.movie.R;
@@ -37,17 +35,14 @@ import java.util.List;
  * Created by XP on 2015/4/12.
  */
 public class HomeActivity extends BaseActivity {
-    private Toolbar mToolbar;
     private GridView gridView;
     private List<Movie> mMovies;
     private boolean isHome = true;
-    private ProgressBar progressBar;
     private DrawerLayout mDrawerLayout;
     private RelativeLayout relativeLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListView leftDrawerListView, settingListView;
-    private ArrayAdapter drawerItemAdapter, drawerSettingItemAdapter;
     private static final String ENDPOINT = "http://api.douban.com";
     private static final String US_BOX = "北美票房榜";
     private static final String TOP250 = "TOP250";
@@ -63,22 +58,25 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        initClick();
+        new MovieTask().execute(US_BOX_URL);
     }
 
     public void initView() {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_left);
         relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
         leftDrawerListView = (ListView) findViewById(R.id.lv_left_menu);
         settingListView = (ListView) findViewById(R.id.lv_left_setting_menu);
         gridView = (GridView) findViewById(R.id.gridView);
-        progressBar = (ProgressBar) findViewById(R.id.progressbar);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressbar);
         progressBar.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.green, R.color.orange);
         setupAdapter();
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerOpened(View drawerView) {  //打开菜单
@@ -91,24 +89,24 @@ public class HomeActivity extends BaseActivity {
             }
         };
         mDrawerToggle.syncState();
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "is refreshing");
                 mSwipeRefreshLayout.setRefreshing(true);
-                if (isHome){
+                if (isHome) {
                     new MovieTask().execute(US_BOX_URL);
-                }else {
+                } else {
                     new MovieTask().execute(TOP250_URL);
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+
         initDrawerItem();
-        new MovieTask().execute(US_BOX_URL);
     }
 
-    //gridView适配器
+    //适配器
     private void setupAdapter() {
         if (mMovies != null) {
             gridView.setAdapter(new MovieAdapter(HomeActivity.this, mMovies));
@@ -133,7 +131,7 @@ public class HomeActivity extends BaseActivity {
             DrawerItem drawerItem = new DrawerItem(drawerItemIconIds[i], drawerItemNames[i]);
             drawerItemArrayList.add(drawerItem);
         }
-        drawerItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_item, drawerItemArrayList);
+        ArrayAdapter drawerItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_item, drawerItemArrayList);
         leftDrawerListView.setAdapter(drawerItemAdapter);
         //下半部分
         ArrayList<DrawerItem> drawerSettingItemsArrayList = new ArrayList<>();
@@ -146,9 +144,9 @@ public class HomeActivity extends BaseActivity {
             DrawerItem drawerItem = new DrawerItem(drawerSettingItemIconIds[i], drawerSettingItemNames[i]);
             drawerSettingItemsArrayList.add(drawerItem);
         }
-        drawerSettingItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_item, drawerSettingItemsArrayList);
+        ArrayAdapter drawerSettingItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_item, drawerSettingItemsArrayList);
         settingListView.setAdapter(drawerSettingItemAdapter);
-        initClick();
+
     }
 
     //点击事件
@@ -170,17 +168,17 @@ public class HomeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        ToastUtils.showShortToast(HomeActivity.this,getString(R.string.loading));
+                        ToastUtils.showShortToast(HomeActivity.this, getString(R.string.loading));
                         mSwipeRefreshLayout.setRefreshing(true);
                         new MovieTask().execute(US_BOX_URL);
-                        isHome=true;
+                        isHome = true;
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 1:
-                        ToastUtils.showShortToast(HomeActivity.this,getString(R.string.loading));
+                        ToastUtils.showShortToast(HomeActivity.this, getString(R.string.loading));
                         mSwipeRefreshLayout.setRefreshing(true);
                         new MovieTask().execute(TOP250_URL);
-                        isHome=false;
+                        isHome = false;
                         mDrawerLayout.closeDrawer(relativeLayout);
                         break;
                     case 2:
@@ -211,15 +209,14 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
-
     //后台线程,从豆瓣下载并解析Json并存入List容器
     public class MovieTask extends AsyncTask<String, Void, List<Movie>> {
 
         @Override
         protected List<Movie> doInBackground(String... strings) {
-            if (strings[0] == US_BOX_URL) {
+            if (US_BOX_URL.equals(strings[0])) {
                 mMovies = JsonParser.getMovieWithSubject(ENDPOINT + strings[0]);
-            } else if (strings[0] == TOP250_URL) {
+            } else if (TOP250_URL.equals(strings[0])) {
                 mMovies = JsonParser.getMovie(ENDPOINT + strings[0]);
             }
             return mMovies;
