@@ -23,7 +23,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.afollestad:material-dialogs:0.6.2.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.rengwuxian.materialedittext:library:1.8.2'
+    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
 }

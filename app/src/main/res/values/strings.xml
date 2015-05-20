@@ -4,11 +4,12 @@
     <string name="close">close</string>
     <string name="about">关于</string>
     <string name="search">搜索</string>
+    <string name="search_movie">搜索电影</string>
     <string name="movie_name">何以笙箫默</string>
     <string name="my_name">Bigggge</string>
     <string name="us_box">北美票房榜</string>
     <string name="top250">TOP-250</string>
-    <string name="search_hint">搜索电影</string>
+    <string name="search_hint">输入电影名/导演/演员</string>
     <string name="agree">确认</string>
     <string name="suggest_title">提示</string>
     <string name="suggest_content">您的输入有误，请检查你的输入</string>

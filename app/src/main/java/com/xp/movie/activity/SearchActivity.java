@@ -4,16 +4,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.xp.movie.R;
 import com.xp.movie.adapter.MovieSearchAdapter;
 import com.xp.movie.model.Movie;
 import com.xp.movie.parser.JsonParser;
+import com.xp.movie.utils.ToastUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -36,37 +38,34 @@ public class SearchActivity extends BaseActivity {
     }
 
     public void initView() {
-//        toolbar= (Toolbar) findViewById(R.id.search_toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.material_edit_text);
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_CUSTOM);
-//        editText = (MaterialEditText) getSupportActionBar().getCustomView().findViewById(R.id.edit_text_search);m
+        Toolbar toolbar= (Toolbar) findViewById(R.id.search_toolbar);
+        toolbar.setTitle("");
+        toolbar.setSubtitle(getString(R.string.search_movie));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SearchView mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchView.setIconifiedByDefault(true);//表示搜索图标是否在输入框内
-        mSearchView.setQueryHint(getString(R.string.search_hint));
         mSearchView.setIconified(false);
+        mSearchView.setQueryHint(getString(R.string.search_hint));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String s) {
-//                if (s.trim().equals("")) {
-//                    if (movieList != null) {
-//                        movieList.clear();
-//                    }
-                try {
-                    String s1 = URLEncoder.encode(s, "utf-8");
-                    new SearchTask().execute(s1);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-//                } else {
-//                    new MaterialDialog.Builder(SearchActivity.this)
-//                            .title(R.string.suggest_title)
-//                            .content(R.string.suggest_content)
-//                            .positiveText(R.string.agree)
-//                            .show();
-//                }
-                return true;
+                ToastUtils.showLongToast(SearchActivity.this,"搜索中...");
+                if (!TextUtils.isEmpty(s)) {
+                    try {
+                        String s1 = URLEncoder.encode(s, "utf-8");
+                        new SearchTask().execute(s1);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                } else
+                    new MaterialDialog.Builder(SearchActivity.this)
+                            .title(R.string.suggest_title)
+                            .content(R.string.suggest_content)
+                            .positiveText(R.string.agree)
+                            .show();
+
+              return false;
             }
 
             @Override
@@ -87,16 +86,6 @@ public class SearchActivity extends BaseActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 
     public class SearchTask extends AsyncTask<String, Void, List<Movie>> {
         @Override

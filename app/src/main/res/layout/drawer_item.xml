@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingLeft="18dp"
-        android:textColor="@color/text_color"
+        android:textColor="@color/drawer_text_color"
         android:textSize="17sp"
         tools:text="item" />
 </LinearLayout>

@@ -11,14 +11,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.xp.movie.R;
 import com.xp.movie.model.Movie;
-import com.xp.movie.utils.CacheUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import libcore.io.DiskLruCache;
-import libcore.io.DiskLruCache.Snapshot;
 
 /**
  * Created by XP on 2015/4/30.

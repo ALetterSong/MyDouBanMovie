@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -34,7 +35,7 @@ import java.util.List;
 /**
  * Created by XP on 2015/4/12.
  */
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends ActionBarActivity {
     private GridView gridView;
     private List<Movie> mMovies;
     private boolean isHome = true;
@@ -207,6 +208,11 @@ public class HomeActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    public void doClick(View view) {
+            ToastUtils.showLongToast(this, "click~click~~~");
+
     }
 
     //后台线程,从豆瓣下载并解析Json并存入List容器

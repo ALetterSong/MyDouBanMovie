@@ -47,7 +47,6 @@ public class MovieInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String moviesId = getIntent().getStringExtra("id");
         new MovieInfoTask().execute(moviesId);
-//        Log.i(TAG, moviesId + "-----------------------");
         imageView = (ImageView) findViewById(R.id.movie_info_imageView);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvDirector = (TextView) findViewById(R.id.tv_directors);

@@ -4,13 +4,11 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_search"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_search_white_24dp"
         android:title="@string/search"
-        android:icon="@drawable/ic_search_black_18dp"
-        />
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_setting"
-        app:showAsAction="never"
         android:title="@string/about"
-        ></item>
+        app:showAsAction="never"></item>
 </menu>
