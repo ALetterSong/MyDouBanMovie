@@ -2,7 +2,6 @@ package com.xp.movie.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.xp.movie.utils.ActivityCollector;

@@ -53,7 +53,6 @@ public class MovieInfoActivity extends BaseActivity {
         tvCasts = (TextView) findViewById(R.id.tv_casts);
         tvGenres = (TextView) findViewById(R.id.tv_genres);
         tvSummary = (TextView) findViewById(R.id.tv_summary);
-
     }
 
     //后台线程,从豆瓣下载并解析Json并存入List容器
